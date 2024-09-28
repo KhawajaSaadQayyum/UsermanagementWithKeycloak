@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: keycloak-security-config
+  datasource:
+    url: jdbc:mysql://localhost:3307/dev_user_management   # MySQL URL with the correct port and database
+    username: root                              # MySQL root user
+    password: root                              # MySQL root password
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL JDBC driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update                         # Hibernate auto DDL generation strategy
+    show-sql: true                             # Enable SQL logging
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 100
+
+app:
+  keycloak:
+    admin:
+      clientId: admin-cli
+      clientSecret: XdnfOoRBpLKYTiuLqy3O6NQwRZZrt5iV
+    realm: user-management
+    serverUrl: http://localhost:9000
+

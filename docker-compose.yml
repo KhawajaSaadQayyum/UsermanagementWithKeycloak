@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql-keycloak:
+    image: mysql:8.0
+    container_name: mysql-keycloak
+    environment:
+      MYSQL_ROOT_PASSWORD: root     # Replace with your root password
+#      MYSQL_DATABASE: keycloak               # Name of the database Keycloak will use
+#      MYSQL_USER: keycloak_user              # Replace with your custom user
+#      MYSQL_PASSWORD: keycloak_password      # Replace with your custom password
+    volumes:
+      - mysql_data:/var/lib/mysql            # Persistent storage for MySQL data
+    networks:
+      - keycloak-network
+    ports:
+      - "3307:3306"                          # Expose MySQL on port 3307 (host)
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1  # Adjust to the specific version you need
+    container_name: keycloak
+    environment:
+      DB_VENDOR: mysql
+      DB_ADDR: mysql-keycloak                # The hostname of the MySQL container
+      DB_DATABASE: keycloak
+      DB_USER: keycloak_user
+      DB_PASSWORD: keycloak_password
+      KEYCLOAK_ADMIN: admin                  # Keycloak admin username
+      KEYCLOAK_ADMIN_PASSWORD: saad4110 # Keycloak admin password
+    command: start-dev                       # Start Keycloak in development mode
+    depends_on:
+      - mysql-keycloak                       # Ensure MySQL is started before Keycloak
+    volumes:
+      - keycloak_data:/opt/keycloak/data     # Persistent storage for Keycloak data
+    networks:
+      - keycloak-network
+    ports:
+      - "9000:8080"                          # Expose Keycloak on port 8080
+
+volumes:
+  mysql_data:
+  keycloak_data:
+
+networks:
+  keycloak-network:
